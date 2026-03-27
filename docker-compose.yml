@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    container_name: example-api
+    env_file:
+      - ./api/.env
+    environment:
+      APP_MODULE: "main:app"
+      HOST: "0.0.0.0"
+      PORT: "8001"
+      PYTHONPATH: "/app"
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./api:/app
+      - ./shared:/app/shared
+    working_dir: /app
+
+  events:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: events/Dockerfile
+    container_name: example-events
+    environment:
+      FUNCTIONS_WORKER_RUNTIME: "python"
+      SERVICE_BUS_CONNECTION_STRING: "${SERVICE_BUS_CONNECTION_STRING}"
+      SERVICE_BUS_TOPIC_NAME: "${SERVICE_BUS_TOPIC_NAME:-example-topic}"
+      SERVICE_BUS_SUBSCRIPTION_NAME: "${SERVICE_BUS_SUBSCRIPTION_NAME:-subscription-example}"
+    ports:
+      - "8002:80"
+    volumes:
+      - ./events:/home/site/wwwroot
+      - ./shared:/home/site/wwwroot/shared
+    working_dir: /home/site/wwwroot

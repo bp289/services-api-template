@@ -1,0 +1,17 @@
+# Environment files
+.env
+.env.*
+**/.env
+**/.env.*
+
+# Python cache/virtualenv
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+venv/
+
+# Local editor/project files
+.DS_Store
